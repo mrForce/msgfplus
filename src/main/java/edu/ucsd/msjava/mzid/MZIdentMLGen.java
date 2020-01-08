@@ -335,15 +335,22 @@ public class MZIdentMLGen {
 
                 int score = match.getScore();
                 double specEValue = match.getSpecEValue();
+                /*
+                 * Added by Jordan Force
+                 */
+                double specPValue = match.getSpecPValue();
                 int numPeptides = sa.getNumDistinctPeptides(params.getEnzyme() == null ? length - 2 : length - 1);
                 double eValue = specEValue * numPeptides;
-
+                //do the Sidak correction.
+                double pValue = 1.0 - Math.pow(1.0 - specPValue, numPeptides);
+                
                 String specEValueStr;
                 if (specEValue < Float.MIN_NORMAL)
                     specEValueStr = String.valueOf(specEValue);
                 else
                     specEValueStr = String.valueOf((float) specEValue);
 
+               
                 // Specification: rank does not increment for equally-scored results
                 if (prevSpecEValue != specEValue) {
                     ++rank;
@@ -355,7 +362,8 @@ public class MZIdentMLGen {
                     eValueStr = String.valueOf(eValue);
                 else
                     eValueStr = String.valueOf((float) eValue);
-
+                String pValueStr = String.valueOf(pValue);
+                String specPValueStr = String.valueOf(specPValue);
                 SpectrumIdentificationItem sii = new SpectrumIdentificationItem();
 
                 sii.setChargeState(charge);
@@ -399,6 +407,15 @@ public class MZIdentMLGen {
                 CvParam eValueCV = Constants.makeCvParam("MS:1002053", "MS-GF:EValue");
                 eValueCV.setValue(eValueStr);
                 cvList.add(eValueCV);
+                /*
+                 * Adding a PSM level p-value.
+                 */
+                CvParam pValueCV = Constants.makeCvParam("MS:1002352", "Jordan:PValue");
+                pValueCV.setValue(pValueStr);
+                cvList.add(pValueCV);
+                CvParam specPValueCV = Constants.makeCvParam("MS:1002353", "Jordan:SpecPValue");
+                specPValueCV.setValue(specPValueStr);
+                cvList.add(specPValueCV);
 
                 if (match.getPSMQValue() != null) {
                     CvParam psmQValueCV = Constants.makeCvParam("MS:1002054", "MS-GF:QValue");

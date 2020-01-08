@@ -1,6 +1,6 @@
 // (‑●‑●)> released under the WTFPL v2 license, by Gregory Pakosz (@gpakosz)
 
-package net.pempak.unicode;
+package net.pempek.unicode;
 
 import java.io.IOException;
 import java.io.InputStream;

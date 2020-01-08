@@ -1,9 +1,11 @@
 package edu.ucsd.msjava.msgf;
 
+
+import java.util.stream.DoubleStream;
+
 public class ScoreDist extends ScoreBound {
     private double[] numDistribution;
     private double[] probDistribution;
-
     ScoreDist(int minScore, int maxScore, boolean calcNumber, boolean calcProb) {
         super(minScore, maxScore);
         if (calcNumber)
@@ -58,6 +60,30 @@ public class ScoreDist extends ScoreBound {
         return specProb;
     }
 
+    public double getSpectralPValue(int score) {
+    	/* Added by Jordan Force
+    	 * This is an adaptation of equation 10 in "Computing Exact p-values for a Cross-correlation Shotgun Proteomics Score Function"
+    	 * 
+    	 */
+    	if(score > minScore) {
+    		System.out.println("better than minscore");
+    	}
+    	double total_prob  = DoubleStream.of(probDistribution).sorted().sum();
+        int minIndex = (score >= minScore) ? score - minScore : 0;
+        //by break_even, because we discretized the scores, we'll assume that half the paths at score actually have a better score.
+        double break_even = getProbability(score)/2;
+        assert break_even > 0;
+        /*
+         * By total_better_than, I mean the total probability of paths with a score greater than score.
+         */
+        double total_better_than = DoubleStream.of(probDistribution).skip(minIndex + 1).sorted().sum();
+        assert total_better_than > 0;
+        //System.out.println(String.format("Total better than %f, break_even %f, total_prob %f" , total_better_than, break_even, total_prob));
+        return (break_even + total_better_than)/total_prob;
+        
+        
+        
+    }
     public double getSpectralProbability(double specProbThreshold) {
         double specProb = 0;
         for (int t = probDistribution.length - 1; t >= 0; t--) {

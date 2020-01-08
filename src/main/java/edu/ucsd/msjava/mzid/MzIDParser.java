@@ -90,6 +90,8 @@ public class MzIDParser {
                         "\tMSGFScore" +
                         "\tSpecEValue" +
                         "\tEValue" +
+                        "\tPValue" + 
+                        "\tSpecPValue" +
                         (!this.doNotShowQValue ? "\tQValue\tPepQValue" : "");
         out.println(header);
 
@@ -143,7 +145,9 @@ public class MzIDParser {
                     String eValue = (cvParam = cvParamMap.get("MS:1002053")) == null ? "" : cvParam.getValue();
                     String psmQValue = (cvParam = cvParamMap.get("MS:1002054")) == null ? "" : cvParam.getValue();
                     String pepQValue = (cvParam = cvParamMap.get("MS:1002055")) == null ? "" : cvParam.getValue();
-
+                    //added by jordan
+                    String specPValue = (cvParam=cvParamMap.get("MS:1002353")) == null ? "" : cvParam.getValue();
+                    String pValue = (cvParam=cvParamMap.get("MS:1002352")) == null ? "" : cvParam.getValue();
                     Map<String, UserParam> userParamMap = getUserParamMap(sii.getUserParam());
                     UserParam userParam;
                     String fragMethod = (userParam = userParamMap.get("AssumedDissociationMethod")) == null ? null : userParam.getValue();
@@ -191,6 +195,8 @@ public class MzIDParser {
                                         + "\t" + rawScore
                                         + "\t" + specEValue
                                         + "\t" + eValue
+                                        + "\t" + pValue
+                                        + "\t" + specPValue
                                 );
                                 if (!this.doNotShowQValue)
                                     out.print("\t" + psmQValue + "\t" + pepQValue);
@@ -239,6 +245,7 @@ public class MzIDParser {
                                     + "\t" + rawScore
                                     + "\t" + specEValue
                                     + "\t" + eValue
+                                    + "\t" + pValue
                             );
                             if (!this.doNotShowQValue)
                                 out.print("\t" + psmQValue + "\t" + pepQValue);

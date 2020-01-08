@@ -243,7 +243,7 @@ public class ComputeFDR {
         if (out != System.out)
             out.close();
     }
-
+    
     public static void addQValues(
             List<MSGFPlusMatch> resultList,
             CompactSuffixArray sa,
@@ -253,7 +253,19 @@ public class ComputeFDR {
         MSGFPlusPSMSet target = new MSGFPlusPSMSet(resultList, false, sa, decoyProteinPrefix);
         target.setConsiderBestMatchOnly(considerBestMatchOnly);
         target.read();
-
+        /*
+         * for now, I'll just use a script to extract the p-values and apply BH for estimating Q-value.
+        if(considerBestMatchOnly) {
+        	
+             * Here, I'll use the p-values to compute a Q-value. This is based off the Benjamini-Hochberg procedure.
+             * 
+             * Since the BH procedure only applies when the p-values are independent, I'll only allow its use when using the top match for each spectra.
+             * 
+             * 
+             
+        	List<MSGFPlusMatch> target_matches = target.getPSMList();
+        }
+    */
         MSGFPlusPSMSet decoy = new MSGFPlusPSMSet(resultList, true, sa, decoyProteinPrefix);
         decoy.setConsiderBestMatchOnly(considerBestMatchOnly);
         decoy.read();
@@ -267,11 +279,10 @@ public class ComputeFDR {
                 dbMatchList.add(match.getBestDBMatch());
             } else
                 dbMatchList = match.getMatchList();
-
+            
             for (DatabaseMatch m : dbMatchList) {
                 float psmQValue = tda.getPSMQValue((float) m.getSpecEValue());
                 Float pepQValue = tda.getPepQValue(m.getPepSeq());
-
                 m.setPSMQValue(psmQValue);
                 m.setPepQValue(pepQValue);
             }

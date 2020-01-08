@@ -19,6 +19,8 @@ public class Match implements Comparable<Match> {
     // optional
     private int deNovoScore;
     private double specProb = 1;
+    private double specPValue = 1;
+    private double pValue = 1.0;
     private ScoreDist scoreDist;
 
     private List<Pair<String, String>> additionalFeatureList = null;
@@ -72,6 +74,18 @@ public class Match implements Comparable<Match> {
         return specProb;
     }
 
+    public void setSpecPValue(double specPValue) {
+    	this.specPValue = specPValue;
+    }
+    public double getSpecPValue() {
+    	return this.specPValue;
+    }
+    public void setPValue(double pValue) {
+    	this.pValue = pValue;
+    }
+    public double getPValue() {
+    	return this.pValue;
+    }
     public void addAdditionalFeature(String key, String value) {
         if (additionalFeatureList == null)
             additionalFeatureList = new ArrayList<Pair<String, String>>();

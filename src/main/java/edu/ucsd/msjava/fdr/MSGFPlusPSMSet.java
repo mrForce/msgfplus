@@ -39,6 +39,7 @@ public class MSGFPlusPSMSet extends PSMSet {
         return this;
     }
 
+
     @Override
     public boolean isGreaterBetter() {
         return false;

@@ -10,12 +10,13 @@ public class MSGFPlusMatch implements Comparable<MSGFPlusMatch> {
     private final int specIndex;
     private final List<DatabaseMatch> matchList;
     private final double specEValue;
-
+    private final double jordanPValue;
     public MSGFPlusMatch(int specIndex, PriorityQueue<DatabaseMatch> matchQueue) {
         this.specIndex = specIndex;
         this.matchList = new ArrayList<DatabaseMatch>(matchQueue);
         Collections.sort(matchList, new Match.SpecProbComparator());
         specEValue = getBestDBMatch().getSpecEValue();
+        jordanPValue = getBestDBMatch().getPValue();
     }
 
     public DatabaseMatch getBestDBMatch() {
@@ -32,6 +33,10 @@ public class MSGFPlusMatch implements Comparable<MSGFPlusMatch> {
 
     public double getSpecEValue() {
         return specEValue;
+    }
+    public double getJordanPValue()
+    {
+    	return jordanPValue;
     }
 
     @Override

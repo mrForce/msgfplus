@@ -99,7 +99,6 @@ public class MzIDToTsv {
         boolean showFormula = paramManager.getIntValue("showFormula") == 1;
 //		boolean onePerScan = paramManager.getIntValue("onePerScan") == 1 ? true : false;
 //		boolean merge = paramManager.getIntValue("merge") == 1 ? true : false;
-
         if (mzIDPath.isDirectory()) {
             for (File f : mzIDPath.listFiles()) {
                 if (f.getName().endsWith(".mzid")) {

@@ -594,6 +594,7 @@ public class DBScanner {
                 if (m.getScore() < minScore)
                     minScore = m.getScore();
             }
+            //minScore = -100;
 
             GeneratingFunctionGroup<NominalMass> gf = new GeneratingFunctionGroup<NominalMass>();
             SimpleDBSearchScorer<NominalMass> scoredSpec = specScanner.getSpecKeyScorerMap().get(specKey);
@@ -626,22 +627,34 @@ public class DBScanner {
                 GeneratingFunction<NominalMass> gfi = new GeneratingFunction<NominalMass>(graph)
                         .doNotBacktrack()
                         .doNotCalcNumber();
-                gfi.setUpScoreThreshold(minScore);
+                
+                //Jordan Force commented out setUpScoreThreshold
+                //gfi.setUpScoreThreshold(minScore);
                 gf.registerGF(graph.getPMNode(), gfi);
             }
 
             boolean isGFComputed = gf.computeGeneratingFunction();
 
-            for (DatabaseMatch match : matchQueue) {
+            for (DatabaseMatch match : matchQueue) {		
                 if (!isGFComputed || match.getNominalPeptideMass() < minPeptideMassIndex || match.getNominalPeptideMass() > maxPeptideMassIndex) {
                     match.setDeNovoScore(Integer.MIN_VALUE);
                     match.setSpecProb(1);
+                    match.setSpecPValue(1);
                 } else {
                     match.setDeNovoScore(gf.getMaxScore() - 1);
                     int score = match.getScore();
+                    System.out.println(String.format("max score: %d", gf.getScoreDist().getMaxScore()));
+                    if(score > gf.getScoreDist().getMinScore()) {
+                    	System.out.println("Greater than min score");
+                    	System.out.println(match.getPepSeq());
+                    	System.out.println(match.getIndex());
+                    }
                     double specProb = gf.getSpectralProbability(score);
+                    double specPValue = gf.getSpectralPValue(score);
+                    assert specPValue > 0;
                     assert (specProb > 0) : specIndex + ": " + match.getDeNovoScore() + " " + match.getScore() + " " + specProb;
                     match.setSpecProb(specProb);
+                    match.setSpecPValue(specPValue);
                     if (storeScoreDist)
                         match.setScoreDist(gf.getScoreDist());
                 }

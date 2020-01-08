@@ -1,6 +1,7 @@
 package edu.ucsd.msjava.parser;
 
 import java.io.*;
+
 import net.pempek.unicode.UnicodeBOMInputStream;
 
 /**

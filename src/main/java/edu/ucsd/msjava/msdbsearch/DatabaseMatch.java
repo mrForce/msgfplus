@@ -17,6 +17,7 @@ public class DatabaseMatch extends Match {
     private Float psmQValue = null;
     private Float pepQValue = null;
 
+    private Float jordanQValue = null;
     // for degenerate peptides
     private SortedSet<Integer> indices;
 
@@ -64,6 +65,12 @@ public class DatabaseMatch extends Match {
         return this.psmQValue;
     }
 
+    public void setJordanQValue(float jordanQValue) {
+    	this.jordanQValue = jordanQValue;
+    }
+    public Float getJordanQValue() {
+    	return this.jordanQValue;
+    }
     public void setPepQValue(Float pepQValue) {
         this.pepQValue = pepQValue;
     }

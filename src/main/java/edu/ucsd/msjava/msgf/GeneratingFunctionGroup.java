@@ -56,6 +56,9 @@ public class GeneratingFunctionGroup<T extends Matter> extends HashMap<T, Genera
     public double getSpectralProbability(int score) {
         return mergedScoreDist.getSpectralProbability(score);
     }
+    public double getSpectralPValue(int score) {
+    	return mergedScoreDist.getSpectralPValue(score);
+    }
 
     public int getMaxScore() {
         if (mergedScoreDist == null)
